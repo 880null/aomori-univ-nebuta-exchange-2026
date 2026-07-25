@@ -24,6 +24,20 @@
 - 些細な1行修正であってもClaude自身がWrite/Editツールで直接コードを書くことは禁止。
   実装は基本的に全てCodexに委任すること。
 - Codexへの委任時は、上記「プロジェクト概要」を要約して必ず文脈として渡す。
+- Codexへの実装委任1回ごとに、UI/画面に関わる変更があった場合は `/impeccable audit` を
+  実行し、デザイン品質を確認してから次のステップに進むこと。
+
+### 実行環境の制約と作業分担
+
+- Codexのサンドボックスは**npmレジストリに接続できない**（`ENOTFOUND registry.npmjs.org`）。
+  そのためCodex自身は依存関係の導入ができない。
+- 分担は次のとおり固定する:
+  - **コードの新規作成・編集 → Codex**
+  - **依存関係の導入（`npm install`）・ビルド検証（`npm run build`）→ Claude**
+- Codexへ委任する際は「`npm install` は実行しないこと」を明示し、
+  依存追加が必要な場合は package.json の編集のみを依頼してClaude側でインストールする。
+- impeccableのフックは `Edit|Write|MultiEdit` を監視するが、実装はCodexが行うため発火しない。
+  デザイン品質チェックはClaudeが明示的に `/impeccable audit` を実行して担保する。
 
 ## 進捗確認・レビュー
 
