@@ -39,6 +39,21 @@
 - impeccableのフックは `Edit|Write|MultiEdit` を監視するが、実装はCodexが行うため発火しない。
   デザイン品質チェックはClaudeが明示的に `/impeccable audit` を実行して担保する。
 
+## デザイン方針
+
+- デザインの拠り所は `apple-design` スキル（`~/.claude/skills/apple-design/SKILL.md`）と
+  `impeccable` スキルの2つ。
+- 締切が近いため、apple-designは全17章のうち以下の3章を優先的に適用する:
+  - **第1章 Response**（遅延の排除・pointer-downでの即時フィードバック）
+    … 祭り会場は電波が混雑するため体感速度が特に重要
+  - **第14章 Reduced motion & accessibility**（`prefers-reduced-motion` 対応）
+    … アクセシビリティ要件として最初から組み込む
+  - **第15章 Typography**（optical sizing / tracking / leading）
+    … 6言語対応でCJKとラテン文字が混在するため行間・字間設計が読みやすさを左右する
+- 第5章（velocity handoff）・第6章（momentum projection）は今回のスコープでは
+  オーバースペックのため見送る。
+- スマートフォンでの片手操作を前提に設計すること。
+
 ## 進捗確認・レビュー
 
 - Codexへの委任1回ごとに、完了後は必ず日本語で要約報告する。

@@ -28,3 +28,4 @@ next-env.d.ts
 
 # AI tooling (各自 `npx impeccable install` で復元可能)
 /.claude/skills/impeccable/
+/.claude/settings.local.json
