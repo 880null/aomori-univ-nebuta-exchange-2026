@@ -6,6 +6,7 @@ FIRST VIEWPORT: 画面上部に小さなプロジェクト名、主見出し、�
 FORM: 図録の作品目録。seed key: 525ac87f。
 */
 import { CatalogFilter } from "@/components/catalog-filter";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { NebutaEntry } from "@/components/nebuta-entry";
 import { getNebutaFloats } from "@/lib/nebuta";
 
@@ -23,6 +24,8 @@ export default function Home() {
           <span>作品</span>
         </p>
       </header>
+
+      <LanguageSwitcher />
 
       <section className="catalog" aria-labelledby="page-title">
         <CatalogFilter

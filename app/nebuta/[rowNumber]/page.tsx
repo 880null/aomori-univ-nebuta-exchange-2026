@@ -3,8 +3,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { withBasePath } from "@/lib/base-path";
-import { defaultLanguage } from "@/lib/language";
+import { languages } from "@/lib/language";
 import {
   getNebutaFloatByRowNumber,
   getNebutaRowNumbers,
@@ -53,9 +54,6 @@ export default async function NebutaDetailPage({
 
   const previousNebuta = getNebutaFloatByRowNumber(nebuta.rowNumber - 1);
   const nextNebuta = getNebutaFloatByRowNumber(nebuta.rowNumber + 1);
-  const bodyParagraphs = nebuta.bodies[defaultLanguage]
-    .split("\n")
-    .filter((paragraph) => paragraph.trim() !== "");
 
   return (
     <main className="page detail-page">
@@ -63,7 +61,7 @@ export default async function NebutaDetailPage({
         一覧へ戻る
       </Link>
 
-      {/* 言語切替はここに入る(次のタスク) */}
+      <LanguageSwitcher />
 
       <header className="detail-header">
         <p className="detail-number">通し番号 {nebuta.rowNumber}</p>
@@ -96,18 +94,28 @@ export default async function NebutaDetailPage({
         <figcaption>原画</figcaption>
       </figure>
 
-      {/* 見どころは日本語データのみのため、日本語表示時に限って掲載する。 */}
-      {defaultLanguage === "ja" && (
-        <section className="detail-highlight" aria-labelledby="highlight-title">
-          <h2 id="highlight-title">見どころ</h2>
-          <p>{nebuta.highlight}</p>
-        </section>
-      )}
+      {/* 見どころは日本語データのみ。多言語データが入り次第この条件を外す。 */}
+      <section
+        className="detail-highlight"
+        data-lang-block="ja"
+        lang="ja"
+        aria-labelledby="highlight-title"
+      >
+        <h2 id="highlight-title">見どころ</h2>
+        <p>{nebuta.highlight}</p>
+      </section>
 
       <section className="detail-body" aria-labelledby="body-title">
         <h2 id="body-title">解説</h2>
-        {bodyParagraphs.map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
+        {languages.map(({ key, htmlLang }) => (
+          <div data-lang-block={key} lang={htmlLang} key={key}>
+            {nebuta.bodies[key]
+              .split("\n")
+              .filter((paragraph) => paragraph.trim() !== "")
+              .map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+          </div>
         ))}
       </section>
 

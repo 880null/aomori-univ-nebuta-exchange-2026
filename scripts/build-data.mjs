@@ -81,6 +81,30 @@ function requireValue(record, fieldName, rowNumber) {
   return value;
 }
 
+function createExcerpt(body, language) {
+  const normalizedBody = body.replace(/\s+/gu, " ").trim();
+  const codePoints = Array.from(normalizedBody);
+  // 抜粋上限は表示用ではなくペイロード削減用で、視覚的な2行打ち切りはCSSが担う。
+  // 1440pxで英語は135文字見え、旧240文字は1.78倍、320文字なら2.37倍の余裕になる。
+  // 表示可能量の2倍以上を保ち、120文字で約2倍以上ある他言語と安全マージンを揃える。
+  const limit = language === "en" ? 320 : 120;
+
+  if (codePoints.length <= limit) {
+    return normalizedBody;
+  }
+
+  let excerptCodePoints = codePoints.slice(0, limit);
+
+  if (language === "en") {
+    const lastSpaceIndex = excerptCodePoints.lastIndexOf(" ");
+    if (lastSpaceIndex !== -1) {
+      excerptCodePoints = excerptCodePoints.slice(0, lastSpaceIndex);
+    }
+  }
+
+  return `${excerptCodePoints.join("")}…`;
+}
+
 async function readPngDimensions(imagePath) {
   if (extname(imagePath).toLowerCase() !== ".png") {
     throw new Error(`Image must be a PNG file: "${imagePath}".`);
@@ -150,20 +174,27 @@ const records = await Promise.all(
       ).replaceAll(legacyImageToken, "genga");
       const imagePath = `/images/nebuta/${imageFileName}`;
       const { imageWidth, imageHeight } = await readPngDimensions(imagePath);
+      const bodies = {
+        ja: requireValue(source, "題材・人物", rowNumber),
+        jaEasy: requireValue(source, "やさしい日本語", rowNumber),
+        en: requireValue(source, "English", rowNumber),
+        zhHans: requireValue(source, "中文（簡体）", rowNumber),
+        zhHant: requireValue(source, "中文（繁體）", rowNumber),
+        ko: requireValue(source, "韓国語", rowNumber),
+      };
 
       return {
         rowNumber,
         ...splitTitle(requireValue(source, "作品名", rowNumber)),
         org: requireValue(source, "団体名", rowNumber),
         creator: requireValue(source, "ねぶた師", rowNumber),
-        bodies: {
-          ja: requireValue(source, "題材・人物", rowNumber),
-          jaEasy: requireValue(source, "やさしい日本語", rowNumber),
-          en: requireValue(source, "English", rowNumber),
-          zhHans: requireValue(source, "中文（簡体）", rowNumber),
-          zhHant: requireValue(source, "中文（繁體）", rowNumber),
-          ko: requireValue(source, "韓国語", rowNumber),
-        },
+        bodies,
+        excerpts: Object.fromEntries(
+          Object.entries(bodies).map(([language, body]) => [
+            language,
+            createExcerpt(body, language),
+          ]),
+        ),
         tags: {
           themes: splitTags(source["タグ1（テーマ）"] ?? ""),
           messages: splitTags(source["タグ2（メッセージ）"] ?? ""),

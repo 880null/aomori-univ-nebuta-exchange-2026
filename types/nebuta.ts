@@ -25,6 +25,7 @@ export type NebutaFloat = {
   org: string;
   creator: string;
   bodies: NebutaBodies;
+  excerpts: NebutaBodies;
   tags: NebutaTags;
   highlight: string;
   imagePath: string;

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { withBasePath } from "@/lib/base-path";
-import { defaultLanguage } from "@/lib/language";
+import { languages } from "@/lib/language";
 import type { NebutaFloat } from "@/types/nebuta";
 
 type NebutaEntryProps = Readonly<{
@@ -45,7 +45,16 @@ export function NebutaEntry({ nebuta }: NebutaEntryProps) {
         </div>
       </dl>
 
-      <p className="entry-excerpt">{nebuta.bodies[defaultLanguage]}</p>
+      {languages.map(({ key, htmlLang }) => (
+        <p
+          className="entry-excerpt"
+          data-lang-block={key}
+          lang={htmlLang}
+          key={key}
+        >
+          {nebuta.excerpts[key]}
+        </p>
+      ))}
     </li>
   );
 }
