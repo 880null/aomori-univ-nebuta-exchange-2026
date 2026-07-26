@@ -22,7 +22,7 @@ export function NebutaEntry({ nebuta }: NebutaEntryProps) {
           alt={nebuta.title}
           width={nebuta.imageWidth}
           height={nebuta.imageHeight}
-          sizes="112px"
+          sizes="(min-width: 1025px) 150px, 112px"
         />
         <figcaption className="visually-hidden">
           <UiText textKey="gengaCaption" />
