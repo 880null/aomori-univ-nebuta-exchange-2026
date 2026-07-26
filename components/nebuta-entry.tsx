@@ -1,17 +1,11 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
 import { withBasePath } from "@/lib/base-path";
 import { defaultLanguage } from "@/lib/language";
-import { tagAxes } from "@/lib/tag-axes";
 import type { NebutaFloat } from "@/types/nebuta";
 
 type NebutaEntryProps = Readonly<{
   nebuta: NebutaFloat;
 }>;
-
-type TagColorStyle = CSSProperties & {
-  "--tag-color": string;
-};
 
 export function NebutaEntry({ nebuta }: NebutaEntryProps) {
   return (
@@ -49,23 +43,6 @@ export function NebutaEntry({ nebuta }: NebutaEntryProps) {
       </dl>
 
       <p className="entry-excerpt">{nebuta.bodies[defaultLanguage]}</p>
-
-      <dl className="entry-tags" aria-label="作品タグ">
-        {tagAxes.map((axis) => (
-          <div
-            className="tag-chip"
-            style={
-              {
-                "--tag-color": `var(${axis.colorVariable})`,
-              } as TagColorStyle
-            }
-            key={axis.key}
-          >
-            <dt>{axis.label}</dt>
-            <dd>{nebuta.tags[axis.key].join("、")}</dd>
-          </div>
-        ))}
-      </dl>
     </li>
   );
 }
