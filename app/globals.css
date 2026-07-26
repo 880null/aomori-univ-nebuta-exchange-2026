@@ -28,6 +28,8 @@
 
 html {
   min-width: 320px;
+  scroll-padding-top: calc(6rem + 1px);
+  scroll-padding-top: calc(6rem + 1px + env(safe-area-inset-top, 0px));
   background: var(--washi);
   -webkit-text-size-adjust: 100%;
 }
@@ -144,10 +146,32 @@ h1 [data-lang-block="en"] {
 }
 
 .language-switcher {
+  position: sticky;
+  top: 0;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 1100;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-block: 1.125rem;
+  margin-block: 0 1.125rem;
+  margin-inline:
+    calc(0px - max(1.125rem, env(safe-area-inset-left)))
+    calc(0px - max(1.125rem, env(safe-area-inset-right)));
+  padding-inline:
+    max(1.125rem, env(safe-area-inset-left))
+    max(1.125rem, env(safe-area-inset-right));
+  background: var(--washi);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.language-switcher::before {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 0;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--washi);
+  content: "";
+  pointer-events: none;
 }
 
 .language-switcher-button {
@@ -851,6 +875,19 @@ h1 [data-lang-block="en"] {
 }
 
 @media (min-width: 500px) {
+  html {
+    scroll-padding-top: calc(2.75rem + 1px);
+    scroll-padding-top: calc(2.75rem + 1px + env(safe-area-inset-top, 0px));
+  }
+
+  .language-switcher {
+    gap: 0.25rem;
+  }
+
+  .language-switcher-button {
+    padding-inline: 0.125rem;
+  }
+
   .catalog-entry {
     grid-template-columns: 2.25rem 112px minmax(0, 35rem);
     grid-template-areas:
@@ -894,8 +931,27 @@ h1 [data-lang-block="en"] {
   }
 }
 
+@media (min-width: 640px) {
+  .language-switcher {
+    gap: 0.5rem;
+  }
+
+  .language-switcher-button {
+    padding-inline: 0.75rem;
+  }
+}
+
 @media (min-width: 1025px) {
   .page {
+    padding-inline:
+      max(2rem, env(safe-area-inset-right))
+      max(2rem, env(safe-area-inset-left));
+  }
+
+  .language-switcher {
+    margin-inline:
+      calc(0px - max(2rem, env(safe-area-inset-right)))
+      calc(0px - max(2rem, env(safe-area-inset-left)));
     padding-inline:
       max(2rem, env(safe-area-inset-right))
       max(2rem, env(safe-area-inset-left));
