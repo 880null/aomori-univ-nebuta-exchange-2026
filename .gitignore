@@ -5,6 +5,10 @@
 /.next
 /out
 
+# postbuild（scripts/build-pwa.mjs）が毎回生成する。
+# 中身にビルドごとのコンテンツハッシュが入るためCIの生成物と必ず食い違う。
+/public/sw.js
+
 # Local environment files
 .env*
 !.env.example
