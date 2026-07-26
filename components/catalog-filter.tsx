@@ -8,6 +8,8 @@ import {
   useMemo,
   useState,
 } from "react";
+import { UiText } from "@/components/ui-text";
+import { useUiText } from "@/hooks/use-language";
 import { tagAxes } from "@/lib/tag-axes";
 import type { NebutaTags } from "@/types/nebuta";
 
@@ -31,6 +33,7 @@ function selectionKey(axisKey: keyof NebutaTags, value: string) {
 }
 
 export function CatalogFilter({ entries, children }: CatalogFilterProps) {
+  const getUiText = useUiText();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTags, setSelectedTags] = useState<Set<string>>(
     () => new Set(),
@@ -90,7 +93,9 @@ export function CatalogFilter({ entries, children }: CatalogFilterProps) {
     <>
       <section className="catalog-filter" aria-labelledby={`${panelId}-title`}>
         <div className="filter-heading">
-          <h2 id={`${panelId}-title`}>絞り込み</h2>
+          <h2 id={`${panelId}-title`}>
+            <UiText textKey="filterHeading" />
+          </h2>
           <button
             className="filter-toggle"
             type="button"
@@ -98,13 +103,19 @@ export function CatalogFilter({ entries, children }: CatalogFilterProps) {
             aria-controls={panelId}
             onClick={() => setIsOpen((current) => !current)}
           >
-            {isOpen ? "閉じる" : "条件を選ぶ"}
+            {isOpen ? (
+              <UiText textKey="filterClose" />
+            ) : (
+              <UiText textKey="filterOpen" />
+            )}
           </button>
         </div>
 
         {selectedTags.size > 0 && (
           <div className="selected-filter">
-            <p className="selected-filter-label">選択中</p>
+            <p className="selected-filter-label">
+              <UiText textKey="selectedLabel" />
+            </p>
             <div className="filter-tags">
               {optionsByAxis.flatMap(({ axis, options }) =>
                 options.map((option) => {
@@ -122,11 +133,13 @@ export function CatalogFilter({ entries, children }: CatalogFilterProps) {
                         } as CSSProperties
                       }
                       type="button"
-                      aria-label={`${option.value}の絞り込みを解除`}
+                      aria-label={getUiText("removeFilter", {
+                        tag: option.value,
+                      })}
                       onClick={() => toggleTag(key)}
                       key={key}
                     >
-                      <span>{option.value}</span>
+                      <span lang="ja">{option.value}</span>
                       <span className="filter-tag-count">{option.count}</span>
                     </button>
                   );
@@ -137,7 +150,7 @@ export function CatalogFilter({ entries, children }: CatalogFilterProps) {
                 type="button"
                 onClick={() => setSelectedTags(new Set())}
               >
-                すべて解除
+                <UiText textKey="clearAll" />
               </button>
             </div>
           </div>
@@ -149,7 +162,9 @@ export function CatalogFilter({ entries, children }: CatalogFilterProps) {
 
             return (
               <section className="filter-axis" key={axis.key}>
-                <h3 id={axisLabelId}>{axis.label}</h3>
+                <h3 id={axisLabelId}>
+                  <UiText textKey={axis.labelKey} />
+                </h3>
                 <div
                   className="filter-tags"
                   role="group"
@@ -172,7 +187,7 @@ export function CatalogFilter({ entries, children }: CatalogFilterProps) {
                         onClick={() => toggleTag(key)}
                         key={key}
                       >
-                        <span>{option.value}</span>
+                        <span lang="ja">{option.value}</span>
                         <span className="filter-tag-count">{option.count}</span>
                       </button>
                     );
@@ -184,9 +199,17 @@ export function CatalogFilter({ entries, children }: CatalogFilterProps) {
         </div>
 
         <p className="filter-result" aria-live="polite">
-          {selectedTags.size === 0
-            ? `全${entries.length}件`
-            : `${entries.length}件中 ${visibleChildren.length}件を表示`}
+          {selectedTags.size === 0 ? (
+            <UiText textKey="resultAll" values={{ n: entries.length }} />
+          ) : (
+            <UiText
+              textKey="resultFiltered"
+              values={{
+                total: entries.length,
+                n: visibleChildren.length,
+              }}
+            />
+          )}
         </p>
       </section>
 

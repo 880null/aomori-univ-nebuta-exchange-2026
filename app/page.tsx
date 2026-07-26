@@ -8,6 +8,7 @@ FORM: 図録の作品目録。seed key: 525ac87f。
 import { CatalogFilter } from "@/components/catalog-filter";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { NebutaEntry } from "@/components/nebuta-entry";
+import { UiText } from "@/components/ui-text";
 import { getNebutaFloats } from "@/lib/nebuta";
 
 export default function Home() {
@@ -16,12 +17,18 @@ export default function Home() {
   return (
     <main className="page">
       <header className="catalog-header">
-        <p className="eyebrow">青森大学 国際交流プロジェクト</p>
-        <h1 id="page-title">ねぶたガイド</h1>
-        <p className="image-note">掲載画像は原画です</p>
+        <p className="eyebrow">
+          <UiText textKey="eyebrow" />
+        </p>
+        <h1 id="page-title">
+          <UiText textKey="siteTitle" />
+        </h1>
+        <p className="image-note">
+          <UiText textKey="imageNote" />
+        </p>
         <p className="catalog-summary">
           <span className="catalog-count">{nebutaFloats.length}</span>
-          <span>作品</span>
+          <UiText textKey="worksUnit" />
         </p>
       </header>
 

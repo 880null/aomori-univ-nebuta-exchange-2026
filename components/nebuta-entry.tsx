@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { UiText } from "@/components/ui-text";
 import { withBasePath } from "@/lib/base-path";
 import { languages } from "@/lib/language";
 import type { NebutaFloat } from "@/types/nebuta";
@@ -18,30 +19,41 @@ export function NebutaEntry({ nebuta }: NebutaEntryProps) {
       <figure className="entry-image">
         <Image
           src={withBasePath(nebuta.imagePath)}
-          alt={`${nebuta.title}の原画`}
+          alt={nebuta.title}
           width={nebuta.imageWidth}
           height={nebuta.imageHeight}
           sizes="112px"
         />
+        <figcaption className="visually-hidden">
+          <UiText textKey="gengaCaption" />
+        </figcaption>
       </figure>
 
       <div className="entry-title">
         <h2>
-          <Link href={`/nebuta/${nebuta.rowNumber}/`}>{nebuta.title}</Link>
+          <Link href={`/nebuta/${nebuta.rowNumber}/`} lang="ja">
+            {nebuta.title}
+          </Link>
         </h2>
         {nebuta.titleReading && (
-          <p className="title-reading">{nebuta.titleReading}</p>
+          <p className="title-reading" lang="ja">
+            {nebuta.titleReading}
+          </p>
         )}
       </div>
 
       <dl className="entry-credits">
         <div>
-          <dt>団体名</dt>
-          <dd>{nebuta.org}</dd>
+          <dt>
+            <UiText textKey="orgLabel" />
+          </dt>
+          <dd lang="ja">{nebuta.org}</dd>
         </div>
         <div>
-          <dt>制作者名</dt>
-          <dd>{nebuta.creator}</dd>
+          <dt>
+            <UiText textKey="creatorLabel" />
+          </dt>
+          <dd lang="ja">{nebuta.creator}</dd>
         </div>
       </dl>
 

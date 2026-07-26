@@ -6,9 +6,11 @@ import {
   languageStorageKey,
   languages,
 } from "@/lib/language";
+import { useUiText } from "@/hooks/use-language";
 import type { LanguageKey } from "@/types/nebuta";
 
 export function LanguageSwitcher() {
+  const getUiText = useUiText();
   const [selectedLanguage, setSelectedLanguage] =
     useState<LanguageKey>(defaultLanguage);
 
@@ -38,7 +40,7 @@ export function LanguageSwitcher() {
     <div
       className="language-switcher"
       role="group"
-      aria-label="表示言語"
+      aria-label={getUiText("languageGroupLabel")}
     >
       {languages.map(({ key, label, htmlLang }) => (
         <button

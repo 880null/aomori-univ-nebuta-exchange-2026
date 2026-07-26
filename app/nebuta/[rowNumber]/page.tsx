@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { UiText } from "@/components/ui-text";
 import { withBasePath } from "@/lib/base-path";
 import { languages } from "@/lib/language";
 import {
@@ -58,40 +59,44 @@ export default async function NebutaDetailPage({
   return (
     <main className="page detail-page">
       <Link className="detail-back-link" href="/">
-        一覧へ戻る
+        <UiText textKey="backToList" />
       </Link>
 
       <LanguageSwitcher />
 
       <header className="detail-header">
-        <p className="detail-number">通し番号 {nebuta.rowNumber}</p>
-        <h1>{nebuta.title}</h1>
+        <p className="detail-number">
+          <UiText textKey="serialNumber" /> {nebuta.rowNumber}
+        </p>
+        <h1 lang="ja">{nebuta.title}</h1>
         {nebuta.titleReading && (
-          <p className="detail-title-reading">{nebuta.titleReading}</p>
+          <p className="detail-title-reading" lang="ja">
+            {nebuta.titleReading}
+          </p>
         )}
       </header>
 
       <dl className="detail-credits">
         <div>
-          <dt>団体名</dt>
-          <dd>{nebuta.org}</dd>
+          <dt><UiText textKey="orgLabel" /></dt>
+          <dd lang="ja">{nebuta.org}</dd>
         </div>
         <div>
-          <dt>制作者名</dt>
-          <dd>{nebuta.creator}</dd>
+          <dt><UiText textKey="creatorLabel" /></dt>
+          <dd lang="ja">{nebuta.creator}</dd>
         </div>
       </dl>
 
       <figure className="detail-artwork">
         <Image
           src={withBasePath(nebuta.imagePath)}
-          alt={`${nebuta.title}の原画`}
+          alt={nebuta.title}
           width={nebuta.imageWidth}
           height={nebuta.imageHeight}
           sizes="(max-width: 700px) 100vw, 640px"
           priority
         />
-        <figcaption>原画</figcaption>
+        <figcaption><UiText textKey="gengaCaption" /></figcaption>
       </figure>
 
       {/* 見どころは日本語データのみ。多言語データが入り次第この条件を外す。 */}
@@ -101,12 +106,12 @@ export default async function NebutaDetailPage({
         lang="ja"
         aria-labelledby="highlight-title"
       >
-        <h2 id="highlight-title">見どころ</h2>
+        <h2 id="highlight-title"><UiText textKey="highlightHeading" /></h2>
         <p>{nebuta.highlight}</p>
       </section>
 
       <section className="detail-body" aria-labelledby="body-title">
-        <h2 id="body-title">解説</h2>
+        <h2 id="body-title"><UiText textKey="bodyHeading" /></h2>
         {languages.map(({ key, htmlLang }) => (
           <div data-lang-block={key} lang={htmlLang} key={key}>
             {nebuta.bodies[key]
@@ -120,16 +125,17 @@ export default async function NebutaDetailPage({
       </section>
 
       <section className="detail-tags" aria-labelledby="tags-title">
-        <h2 id="tags-title">タグ</h2>
+        <h2 id="tags-title"><UiText textKey="tagsHeading" /></h2>
         <dl>
           {tagAxes.map((axis) => (
             <div className="detail-tag-axis" key={axis.key}>
-              <dt>{axis.label}</dt>
+              <dt><UiText textKey={axis.labelKey} /></dt>
               <dd>
                 <ul>
                   {nebuta.tags[axis.key].map((value) => (
                     <li
                       className="detail-tag"
+                      lang="ja"
                       style={
                         {
                           "--tag-color": `var(${axis.colorVariable})`,
@@ -147,7 +153,13 @@ export default async function NebutaDetailPage({
         </dl>
       </section>
 
-      <nav className="detail-pagination" aria-label="前後の作品">
+      <nav
+        className="detail-pagination"
+        aria-labelledby="pagination-title"
+      >
+        <h2 id="pagination-title" className="visually-hidden">
+          <UiText textKey="paginationLabel" />
+        </h2>
         {previousNebuta && (
           <Link
             className="detail-pagination-link detail-pagination-previous"
@@ -155,8 +167,10 @@ export default async function NebutaDetailPage({
           >
             <span aria-hidden="true">←</span>
             <span>
-              <span className="detail-pagination-label">前の作品</span>
-              {previousNebuta.title}
+              <span className="detail-pagination-label">
+                <UiText textKey="previousWork" />
+              </span>
+              <span lang="ja">{previousNebuta.title}</span>
             </span>
           </Link>
         )}
@@ -166,8 +180,10 @@ export default async function NebutaDetailPage({
             href={`/nebuta/${nextNebuta.rowNumber}/`}
           >
             <span>
-              <span className="detail-pagination-label">次の作品</span>
-              {nextNebuta.title}
+              <span className="detail-pagination-label">
+                <UiText textKey="nextWork" />
+              </span>
+              <span lang="ja">{nextNebuta.title}</span>
             </span>
             <span aria-hidden="true">→</span>
           </Link>
