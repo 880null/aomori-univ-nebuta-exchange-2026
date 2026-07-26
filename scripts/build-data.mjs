@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { dirname, extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -81,6 +81,36 @@ function requireValue(record, fieldName, rowNumber) {
   return value;
 }
 
+async function readPngDimensions(imagePath) {
+  if (extname(imagePath).toLowerCase() !== ".png") {
+    throw new Error(`Image must be a PNG file: "${imagePath}".`);
+  }
+
+  const filePath = resolve(projectRoot, "public", `.${imagePath}`);
+  const buffer = await readFile(filePath);
+  const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+
+  if (buffer.length < 24 || !buffer.subarray(0, 8).equals(pngSignature)) {
+    throw new Error(`Invalid PNG signature: "${imagePath}".`);
+  }
+
+  if (
+    buffer.readUInt32BE(8) !== 13 ||
+    buffer.toString("ascii", 12, 16) !== "IHDR"
+  ) {
+    throw new Error(`PNG is missing the expected IHDR chunk: "${imagePath}".`);
+  }
+
+  const imageWidth = buffer.readUInt32BE(16);
+  const imageHeight = buffer.readUInt32BE(20);
+
+  if (imageWidth === 0 || imageHeight === 0) {
+    throw new Error(`PNG has invalid dimensions: "${imagePath}".`);
+  }
+
+  return { imageWidth, imageHeight };
+}
+
 const csv = await readFile(sourcePath, "utf8");
 const rows = parseCsv(csv);
 const [rawHeaders, ...dataRows] = rows;
@@ -92,56 +122,62 @@ if (new Set(headers).size !== headers.length) {
   throw new Error("CSV contains duplicate column headers.");
 }
 
-const records = dataRows
-  .filter((row) => row.some((value) => value.trim() !== ""))
-  .map((row, rowIndex) => {
-    if (row.length !== headers.length) {
-      throw new Error(
-        `CSV row ${rowIndex + 2} has ${row.length} fields; expected ${headers.length}.`,
+const records = await Promise.all(
+  dataRows
+    .filter((row) => row.some((value) => value.trim() !== ""))
+    .map(async (row, rowIndex) => {
+      if (row.length !== headers.length) {
+        throw new Error(
+          `CSV row ${rowIndex + 2} has ${row.length} fields; expected ${headers.length}.`,
+        );
+      }
+
+      const source = Object.fromEntries(
+        headers.map((header, index) => [header, row[index]]),
       );
-    }
+      const rowNumberText = requireValue(source, "Column 1", rowIndex + 2);
+      const rowNumber = Number(rowNumberText);
 
-    const source = Object.fromEntries(
-      headers.map((header, index) => [header, row[index]]),
-    );
-    const rowNumberText = requireValue(source, "Column 1", rowIndex + 2);
-    const rowNumber = Number(rowNumberText);
+      if (!Number.isInteger(rowNumber)) {
+        throw new Error(`Invalid row number: "${rowNumberText}".`);
+      }
 
-    if (!Number.isInteger(rowNumber)) {
-      throw new Error(`Invalid row number: "${rowNumberText}".`);
-    }
+      const legacyImageToken = String.fromCharCode(115, 104, 105, 116, 97, 101);
+      const imageFileName = requireValue(
+        source,
+        "画像ファイル名",
+        rowNumber,
+      ).replaceAll(legacyImageToken, "genga");
+      const imagePath = `/images/nebuta/${imageFileName}`;
+      const { imageWidth, imageHeight } = await readPngDimensions(imagePath);
 
-    const legacyImageToken = String.fromCharCode(115, 104, 105, 116, 97, 101);
-    const imageFileName = requireValue(
-      source,
-      "画像ファイル名",
-      rowNumber,
-    ).replaceAll(legacyImageToken, "genga");
-
-    return {
-      rowNumber,
-      ...splitTitle(requireValue(source, "作品名", rowNumber)),
-      org: requireValue(source, "団体名", rowNumber),
-      creator: requireValue(source, "ねぶた師", rowNumber),
-      bodies: {
-        ja: requireValue(source, "題材・人物", rowNumber),
-        jaEasy: requireValue(source, "やさしい日本語", rowNumber),
-        en: requireValue(source, "English", rowNumber),
-        zhHans: requireValue(source, "中文（簡体）", rowNumber),
-        zhHant: requireValue(source, "中文（繁體）", rowNumber),
-        ko: requireValue(source, "韓国語", rowNumber),
-      },
-      tags: {
-        themes: splitTags(source["タグ1（テーマ）"] ?? ""),
-        messages: splitTags(source["タグ2（メッセージ）"] ?? ""),
-        scenes: splitTags(source["タグ3（シーン）"] ?? ""),
-        historicalContexts: splitTags(source["タグ4（時代背景）"] ?? ""),
-      },
-      highlight: requireValue(source, "見どころ", rowNumber),
-      imagePath: `/images/nebuta/${imageFileName}`,
-      license: requireValue(source, "使用許諾", rowNumber),
-    };
-  });
+      return {
+        rowNumber,
+        ...splitTitle(requireValue(source, "作品名", rowNumber)),
+        org: requireValue(source, "団体名", rowNumber),
+        creator: requireValue(source, "ねぶた師", rowNumber),
+        bodies: {
+          ja: requireValue(source, "題材・人物", rowNumber),
+          jaEasy: requireValue(source, "やさしい日本語", rowNumber),
+          en: requireValue(source, "English", rowNumber),
+          zhHans: requireValue(source, "中文（簡体）", rowNumber),
+          zhHant: requireValue(source, "中文（繁體）", rowNumber),
+          ko: requireValue(source, "韓国語", rowNumber),
+        },
+        tags: {
+          themes: splitTags(source["タグ1（テーマ）"] ?? ""),
+          messages: splitTags(source["タグ2（メッセージ）"] ?? ""),
+          scenes: splitTags(source["タグ3（シーン）"] ?? ""),
+          historicalContexts: splitTags(source["タグ4（時代背景）"] ?? ""),
+        },
+        highlight: requireValue(source, "見どころ", rowNumber),
+        imagePath,
+        imageWidth,
+        imageHeight,
+        license: requireValue(source, "使用許諾", rowNumber),
+      };
+    }),
+);
 
 await mkdir(dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(records, null, 2)}\n`, "utf8");

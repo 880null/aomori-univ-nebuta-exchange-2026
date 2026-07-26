@@ -28,5 +28,7 @@ export type NebutaFloat = {
   tags: NebutaTags;
   highlight: string;
   imagePath: string;
+  imageWidth: number;
+  imageHeight: number;
   license: string;
 };
