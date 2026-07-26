@@ -1,10 +1,11 @@
 /*
 THESIS: 混雑した屋外でも全作品を速く走査できる目録。カード型UIを拒否する。
 OWN-WORLD: 和紙、墨、罫線を基調に、4つの濃彩をタグ識別だけに使う。
-STORY: 利用者は全23作品を見渡し、原画・題名・団体・制作者・解説を理解する。
-FIRST VIEWPORT: 画面上部に小さなプロジェクト名、主見出し、件数を置き、続いて112pxの原画を持つ作品行を見せる。
+STORY: 利用者は全23作品を見渡すか、関心のあるタグで絞り込み、原画・題名・団体・制作者・解説を理解する。
+FIRST VIEWPORT: 画面上部に小さなプロジェクト名、主見出し、件数、折りたたんだ絞り込みを置き、続いて112pxの原画を持つ作品行を見せる。
 FORM: 図録の作品目録。seed key: 525ac87f。
 */
+import { CatalogFilter } from "@/components/catalog-filter";
 import { NebutaEntry } from "@/components/nebuta-entry";
 import { getNebutaFloats } from "@/lib/nebuta";
 
@@ -24,11 +25,16 @@ export default function Home() {
       </header>
 
       <section className="catalog" aria-labelledby="page-title">
-        <ul className="catalog-list">
+        <CatalogFilter
+          entries={nebutaFloats.map(({ rowNumber, tags }) => ({
+            rowNumber,
+            tags,
+          }))}
+        >
           {nebutaFloats.map((nebuta) => (
             <NebutaEntry nebuta={nebuta} key={nebuta.rowNumber} />
           ))}
-        </ul>
+        </CatalogFilter>
       </section>
     </main>
   );

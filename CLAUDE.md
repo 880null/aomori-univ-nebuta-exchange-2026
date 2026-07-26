@@ -18,7 +18,15 @@
 - Claude（自分）は要件定義・設計・Codexへの指示出し・進捗確認・方向性の調整・
   レビューを担当する。
 - 実際のコード実装（ファイルの新規作成・編集）は必ず `/codex:rescue` でCodexに委任する。
-- Codexへの委任時は、必ず `--model gpt-5.6-sol` を指定すること。
+- Codexへの委任時は、必ずモデルを明示すること。タスクの複雑さで使い分ける:
+  - **複雑な実装**（新規画面、データ構造の変更）：`--model gpt-5.6-sol --effort high`
+  - **単純な修正**（スタイル調整、typo、軽微なバグ修正）：`--model gpt-5.6-sol --effort low`
+    - 当初 `--model spark`（`gpt-5.3-codex-spark`）を指定する方針だったが、
+      **ChatGPTアカウントのCodexではsparkが使えない**
+      （`The 'gpt-5.3-codex-spark' model is not supported when using Codex with a ChatGPT account.`）。
+      そのため単純な修正も `gpt-5.6-sol` のまま `--effort low` で軽くする運用とする。
+- 依存関係のないタスクが複数ある場合は、`--background` で連続して投げて並列化してよい。
+  ただし同時に走らせるジョブは2〜3個までとし、`/codex:status` で随時確認すること。
 - 委任の粒度は「1コンポーネント／1機能」単位で細かく刻む。大きな機能をまとめて
   一度に投げない。
 - 些細な1行修正であってもClaude自身がWrite/Editツールで直接コードを書くことは禁止。

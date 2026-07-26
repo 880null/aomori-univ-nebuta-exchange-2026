@@ -6,6 +6,7 @@
   --rule: #aaa191;
   --rule-strong: #39352e;
   --surface: #fffdf7;
+  --on-axis: #fff;
   --axis-theme: #27436f;
   --axis-subject: #1f5b4e;
   --axis-scene: #96372b;
@@ -108,6 +109,119 @@ h1 {
   list-style: none;
 }
 
+.catalog-filter {
+  padding-block: 18px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.filter-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.filter-heading h2 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.filter-toggle,
+.filter-clear,
+.filter-tag {
+  min-height: 44px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filter-toggle,
+.filter-clear {
+  padding: 8px 14px;
+  color: var(--sumi);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+}
+
+.filter-toggle:active,
+.filter-clear:active,
+.filter-tag:active {
+  transform: translateY(2px);
+}
+
+.filter-toggle:focus-visible,
+.filter-clear:focus-visible,
+.filter-tag:focus-visible {
+  outline: 3px solid var(--sumi);
+  outline-offset: 2px;
+}
+
+.selected-filter {
+  margin-top: 14px;
+}
+
+.selected-filter-label,
+.filter-result {
+  color: var(--sumi-weak);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.selected-filter-label {
+  margin-bottom: 6px;
+}
+
+.filter-panel {
+  padding-top: 8px;
+}
+
+.filter-axis {
+  padding-block: 12px;
+}
+
+.filter-axis h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  max-width: 100%;
+  padding: 8px 12px;
+  color: var(--tag-color);
+  background: var(--surface);
+  border: 2px solid var(--tag-color);
+  border-radius: 0;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.filter-tag[aria-pressed="true"],
+.filter-tag-selected {
+  color: var(--on-axis);
+  background: var(--tag-color);
+}
+
+.filter-tag-count {
+  font-size: 0.8125em;
+  font-variant-numeric: tabular-nums;
+}
+
+.filter-result {
+  margin-top: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
 .catalog-entry {
   display: grid;
   grid-template-columns: 2.25rem 112px minmax(0, 1fr);
@@ -199,37 +313,6 @@ h1 {
   white-space: normal;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-}
-
-.entry-tags {
-  grid-area: tags;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tag-chip {
-  display: inline-flex;
-  overflow: hidden;
-  border: 1px solid var(--tag-color);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  line-height: 1.35;
-}
-
-.tag-chip dt,
-.tag-chip dd {
-  padding: 3px 6px;
-}
-
-.tag-chip dt {
-  color: #fff;
-  background: var(--tag-color);
-}
-
-.tag-chip dd {
-  color: var(--sumi);
-  background: var(--surface);
 }
 
 @media (min-width: 760px) {
