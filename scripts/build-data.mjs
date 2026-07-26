@@ -210,6 +210,53 @@ const records = await Promise.all(
     }),
 );
 
+const expectedRowNumbers = Array.from(
+  { length: records.length },
+  (_, index) => index + 1,
+);
+const actualRowNumbers = records
+  .map(({ rowNumber }) => rowNumber)
+  .sort((left, right) => left - right);
+const rowNumberCounts = new Map();
+
+for (const rowNumber of actualRowNumbers) {
+  rowNumberCounts.set(rowNumber, (rowNumberCounts.get(rowNumber) ?? 0) + 1);
+}
+
+const duplicateRowNumbers = [...rowNumberCounts]
+  .filter(([, count]) => count > 1)
+  .map(([rowNumber, count]) => `${rowNumber} (${count} times)`);
+const missingRowNumbers = expectedRowNumbers.filter(
+  (rowNumber) => !rowNumberCounts.has(rowNumber),
+);
+const outOfRangeRowNumbers = actualRowNumbers.filter(
+  (rowNumber) => rowNumber < 1 || rowNumber > records.length,
+);
+
+if (
+  duplicateRowNumbers.length > 0 ||
+  missingRowNumbers.length > 0 ||
+  outOfRangeRowNumbers.length > 0
+) {
+  const problems = [
+    duplicateRowNumbers.length > 0
+      ? `duplicates: ${duplicateRowNumbers.join(", ")}`
+      : null,
+    missingRowNumbers.length > 0
+      ? `missing: ${missingRowNumbers.join(", ")}`
+      : null,
+    outOfRangeRowNumbers.length > 0
+      ? `outside 1-${records.length}: ${outOfRangeRowNumbers.join(", ")}`
+      : null,
+  ].filter(Boolean);
+
+  throw new Error(
+    `rowNumber must contain each integer from 1 to ${records.length} exactly once; ${problems.join("; ")}. Received: ${actualRowNumbers.join(", ")}`,
+  );
+}
+
+records.sort((left, right) => left.rowNumber - right.rowNumber);
+
 await mkdir(dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(records, null, 2)}\n`, "utf8");
 
