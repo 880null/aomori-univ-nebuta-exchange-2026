@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { withBasePath } from "@/lib/base-path";
 import { defaultLanguage } from "@/lib/language";
 import type { NebutaFloat } from "@/types/nebuta";
@@ -10,7 +11,7 @@ type NebutaEntryProps = Readonly<{
 export function NebutaEntry({ nebuta }: NebutaEntryProps) {
   return (
     <li className="catalog-entry">
-      <div className="entry-number" aria-label={`通し番号 ${nebuta.rowNumber}`}>
+      <div className="entry-number">
         {String(nebuta.rowNumber).padStart(2, "0")}
       </div>
 
@@ -25,7 +26,9 @@ export function NebutaEntry({ nebuta }: NebutaEntryProps) {
       </figure>
 
       <div className="entry-title">
-        <h2>{nebuta.title}</h2>
+        <h2>
+          <Link href={`/nebuta/${nebuta.rowNumber}/`}>{nebuta.title}</Link>
+        </h2>
         {nebuta.titleReading && (
           <p className="title-reading">{nebuta.titleReading}</p>
         )}
