@@ -452,7 +452,7 @@ h1 [data-lang-block="en"] {
 }
 
 .detail-page {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .detail-back-link,
@@ -625,7 +625,7 @@ h1 [data-lang-block="en"] {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.75rem;
-  max-width: 760px;
+  max-width: 40rem;
   margin-top: 3.25rem;
   padding-top: 1.125rem;
   border-top: 3px solid var(--rule-strong);
@@ -886,6 +886,10 @@ h1 [data-lang-block="en"] {
     padding-inline:
       max(2rem, env(safe-area-inset-right))
       max(2rem, env(safe-area-inset-left));
+  }
+
+  .detail-page {
+    width: min(100%, 44rem);
   }
 
   .catalog-entry {
