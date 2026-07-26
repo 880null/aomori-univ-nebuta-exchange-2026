@@ -5,6 +5,7 @@ STORY: 利用者は全23作品を見渡すか、関心のあるタグで絞り�
 FIRST VIEWPORT: 画面上部に小さなプロジェクト名、主見出し、件数、折りたたんだ絞り込みを置き、続いて112pxの原画を持つ作品行を見せる。
 FORM: 図録の作品目録。seed key: 525ac87f。
 */
+import Link from "next/link";
 import { CatalogFilter } from "@/components/catalog-filter";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { NebutaEntry } from "@/components/nebuta-entry";
@@ -33,6 +34,13 @@ export default function Home() {
       </header>
 
       <LanguageSwitcher />
+
+      <nav className="map-link-nav">
+        <Link className="map-link" href="/map/">
+          <UiText textKey="mapLink" />
+          <span aria-hidden="true">→</span>
+        </Link>
+      </nav>
 
       <section className="catalog" aria-labelledby="page-title">
         <CatalogFilter

@@ -31,7 +31,13 @@ export type UiTextKey =
   | "tagsHeading"
   | "paginationLabel"
   | "previousWork"
-  | "nextWork";
+  | "nextWork"
+  | "mapLink"
+  | "mapHeading"
+  | "mapGuidance"
+  | "mapListHeading"
+  | "mapAriaLabel"
+  | "hutNumberLabel";
 
 export const uiText = {
   eyebrow: {
@@ -257,6 +263,60 @@ export const uiText = {
     zhHans: "下一件",
     zhHant: "下一件",
     ko: "다음 작품",
+  },
+  mapLink: {
+    ja: "ラッセランド会場案内",
+    jaEasy: "ラッセランドの ばしょを 見る",
+    en: "Rasseland venue guide",
+    zhHans: "拉塞兰会场指南",
+    zhHant: "拉塞蘭會場指南",
+    ko: "랏세랜드 행사장 안내",
+  },
+  mapHeading: {
+    ja: "ラッセランド案内",
+    jaEasy: "ラッセランドの あんない",
+    en: "Rasseland guide",
+    zhHans: "拉塞兰指南",
+    zhHant: "拉塞蘭指南",
+    ko: "랏세랜드 안내",
+  },
+  mapGuidance: {
+    ja: "地図のピンは、ラッセランド全体のおおよその位置です。各ねぶた小屋は、下の小屋番号順リストで確認してください。",
+    jaEasy:
+      "地図の ピンは、ラッセランドぜんたいの だいたいの ばしょです。それぞれの ねぶた小屋は、下の 小屋番号の リストで たしかめて ください。",
+    en: "The pin shows the approximate location of Rasseland as a whole. Use the shed-number list below to find each Nebuta shed.",
+    zhHans:
+      "地图上的图钉表示拉塞兰会场整体的大致位置。请通过下方按小屋编号排列的列表确认各个睡魔灯笼小屋。",
+    zhHant:
+      "地圖上的圖釘表示拉塞蘭會場整體的大致位置。請透過下方按小屋編號排列的列表確認各個睡魔燈籠小屋。",
+    ko: "지도 핀은 랏세랜드 전체의 대략적인 위치를 나타냅니다. 각 네부타 오두막은 아래의 오두막 번호순 목록에서 확인해 주세요.",
+  },
+  mapListHeading: {
+    ja: "ねぶた小屋一覧",
+    jaEasy: "ねぶた小屋の リスト",
+    en: "Nebuta shed list",
+    zhHans: "睡魔灯笼小屋列表",
+    zhHant: "睡魔燈籠小屋列表",
+    ko: "네부타 오두막 목록",
+  },
+  mapAriaLabel: {
+    ja: "ラッセランド全体のおおよその位置を示す操作可能な地図。地図を利用できない場合は、下の小屋番号順リストを利用してください。",
+    jaEasy:
+      "ラッセランドぜんたいの だいたいの ばしょを しめす うごかせる 地図です。地図を つかえない ときは、下の 小屋番号の リストを つかって ください。",
+    en: "Interactive map showing the approximate location of Rasseland as a whole. If you cannot use the map, use the shed-number list below.",
+    zhHans:
+      "显示拉塞兰会场整体大致位置的交互式地图。如果无法使用地图，请使用下方按小屋编号排列的列表。",
+    zhHant:
+      "顯示拉塞蘭會場整體大致位置的互動式地圖。如果無法使用地圖，請使用下方按小屋編號排列的列表。",
+    ko: "랏세랜드 전체의 대략적인 위치를 보여 주는 조작 가능한 지도입니다. 지도를 이용할 수 없으면 아래의 오두막 번호순 목록을 이용해 주세요.",
+  },
+  hutNumberLabel: {
+    ja: "小屋番号",
+    jaEasy: "小屋の ばんごう",
+    en: "Shed No.",
+    zhHans: "小屋编号",
+    zhHant: "小屋編號",
+    ko: "오두막 번호",
   },
 } satisfies Record<UiTextKey, Record<LanguageKey, string>>;
 
