@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
+import { getBasePath } from "./config/base-path.mjs";
 
-const isProduction = process.env.NODE_ENV === "production";
-const basePath: string = isProduction
-  ? "/aomori-univ-nebuta-exchange-2026"
-  : "";
+const basePath = getBasePath();
 
 const nextConfig: NextConfig = {
   output: "export",

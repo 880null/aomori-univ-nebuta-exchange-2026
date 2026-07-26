@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "NODE_ENV=production node scripts/build-pwa.mjs",
     "start": "next start"
   },
   "dependencies": {
@@ -18,6 +19,7 @@
     "@types/node": "26.1.1",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
+    "sharp": "^0.35.3",
     "typescript": "^5.9.3"
   }
 }

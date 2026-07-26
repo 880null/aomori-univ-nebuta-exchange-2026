@@ -1,17 +1,30 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { ServiceWorker } from "@/components/service-worker";
+import { withBasePath } from "@/lib/base-path";
 import { languageStorageKey, languages } from "@/lib/language";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ねぶたガイド",
   description: "青森大学 多言語ねぶたガイド",
+  manifest: withBasePath("/manifest.webmanifest"),
+  icons: {
+    apple: [
+      {
+        url: withBasePath("/apple-touch-icon.png"),
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#f5f0e4",
 };
 
 type RootLayoutProps = Readonly<{
@@ -94,7 +107,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
           dangerouslySetInnerHTML={{ __html: languageInitializationScript }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <ServiceWorker />
+      </body>
     </html>
   );
 }

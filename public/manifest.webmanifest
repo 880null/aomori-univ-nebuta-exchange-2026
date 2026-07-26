@@ -1,0 +1,29 @@
+{
+  "name": "青森大学 国際交流プロジェクト 多言語ねぶたガイド",
+  "short_name": "多言語ねぶたガイド",
+  "lang": "ja",
+  "dir": "ltr",
+  "start_url": "/aomori-univ-nebuta-exchange-2026/",
+  "scope": "/aomori-univ-nebuta-exchange-2026/",
+  "display": "standalone",
+  "theme_color": "#f5f0e4",
+  "background_color": "#f5f0e4",
+  "icons": [
+    {
+      "src": "/aomori-univ-nebuta-exchange-2026/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/aomori-univ-nebuta-exchange-2026/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/aomori-univ-nebuta-exchange-2026/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
