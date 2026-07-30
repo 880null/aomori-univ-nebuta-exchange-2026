@@ -7,6 +7,7 @@
   --rule-strong: #39352e;
   --surface: #fffdf7;
   --on-axis: #fff;
+  --lamp: #ffcf8a;
   --axis-theme: #27436f;
   --axis-subject: #1f5b4e;
   --axis-scene: #96372b;
@@ -336,6 +337,8 @@ h1 [data-lang-block="en"] {
 .filter-tag-selected {
   color: var(--on-axis);
   background: var(--tag-color);
+  box-shadow: inset 0 2px 0 0
+    color-mix(in srgb, var(--tag-color) 55%, var(--lamp));
 }
 
 .filter-tag-count {
@@ -984,6 +987,11 @@ h1 [data-lang-block="en"] {
 @media (prefers-contrast: more) {
   :root {
     --rule: #5b554b;
+  }
+
+  .filter-tag[aria-pressed="true"],
+  .filter-tag-selected {
+    box-shadow: none;
   }
 }
 
