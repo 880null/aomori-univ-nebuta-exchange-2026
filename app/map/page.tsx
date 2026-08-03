@@ -24,6 +24,15 @@ export default function RasselandGuidePage() {
 
       <RasselandMap />
 
+      <a
+        className="map-directions"
+        href="https://www.google.com/maps/dir/?api=1&destination=40.82962508,140.7418799"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <UiText textKey="mapDirections" />
+      </a>
+
       <p className="map-guidance">
         <UiText textKey="mapGuidance" />
       </p>

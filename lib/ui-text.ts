@@ -34,6 +34,7 @@ export type UiTextKey =
   | "nextWork"
   | "mapLink"
   | "mapHeading"
+  | "mapDirections"
   | "mapGuidance"
   | "mapListHeading"
   | "mapAriaLabel"
@@ -279,6 +280,14 @@ export const uiText = {
     zhHans: "拉塞兰指南",
     zhHant: "拉塞蘭指南",
     ko: "랏세랜드 안내",
+  },
+  mapDirections: {
+    ja: "Google マップで道順を見る",
+    jaEasy: "Google マップで 行きかたを 見る",
+    en: "Get directions in Google Maps",
+    zhHans: "在 Google 地图中查看路线",
+    zhHant: "在 Google 地圖中查看路線",
+    ko: "Google 지도에서 길찾기",
   },
   mapGuidance: {
     ja: "地図のピンは、ラッセランド全体のおおよその位置です。各ねぶた小屋は、下の小屋番号順リストで確認してください。",
