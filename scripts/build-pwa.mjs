@@ -204,8 +204,16 @@ const NEXT_STATIC_PREFIX = \`\${BASE_PATH}/_next/static/\`;
 const IMAGE_PREFIX = \`\${BASE_PATH}/images/\`;
 const TILE_HOSTNAME = "cyberjapandata.gsi.go.jp";
 const TILE_CACHE_LIMIT = 300;
+let imagePrecacheRunning = false;
+let imagePrecacheComplete = false;
 
 async function precacheImages() {
+  if (imagePrecacheRunning || imagePrecacheComplete) {
+    return;
+  }
+
+  imagePrecacheRunning = true;
+
   try {
     const imageCache = await caches.open(ASSET_CACHE);
     await Promise.allSettled(
@@ -217,8 +225,15 @@ async function precacheImages() {
         }
       }),
     );
+
+    const cachedResponses = await Promise.all(
+      IMAGE_PRECACHE_URLS.map((imageUrl) => imageCache.match(imageUrl)),
+    );
+    imagePrecacheComplete = cachedResponses.every(Boolean);
   } catch {
     // Image precaching is best-effort and must not fail the lifecycle event.
+  } finally {
+    imagePrecacheRunning = false;
   }
 }
 
@@ -348,6 +363,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
 
   if (request.mode === "navigate") {
+    event.waitUntil(precacheImages());
     event.respondWith(networkFirstNavigation(request));
     return;
   }
