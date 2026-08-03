@@ -38,7 +38,9 @@ export type UiTextKey =
   | "mapGuidance"
   | "mapListHeading"
   | "mapAriaLabel"
-  | "hutNumberLabel";
+  | "hutNumberLabel"
+  | "hutLayoutHeading"
+  | "hutNumberLinkLabel";
 
 export const uiText = {
   eyebrow: {
@@ -326,6 +328,22 @@ export const uiText = {
     zhHans: "小屋编号",
     zhHant: "小屋編號",
     ko: "오두막 번호",
+  },
+  hutLayoutHeading: {
+    ja: "小屋の配置図",
+    jaEasy: "小屋の はいちず",
+    en: "Shed layout",
+    zhHans: "小屋配置图",
+    zhHant: "小屋配置圖",
+    ko: "오두막 배치도",
+  },
+  hutNumberLinkLabel: {
+    ja: "小屋番号 {n}",
+    jaEasy: "小屋の ばんごう {n}",
+    en: "Shed No. {n}",
+    zhHans: "小屋编号 {n}",
+    zhHant: "小屋編號 {n}",
+    ko: "오두막 번호 {n}",
   },
 } satisfies Record<UiTextKey, Record<LanguageKey, string>>;
 

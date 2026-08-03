@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HutLayoutFigure } from "@/components/hut-layout-figure";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { RasselandMap } from "@/components/rasseland-map";
 import { UiText } from "@/components/ui-text";
@@ -32,6 +33,8 @@ export default function RasselandGuidePage() {
       >
         <UiText textKey="mapDirections" />
       </a>
+
+      <HutLayoutFigure />
 
       <p className="map-guidance">
         <UiText textKey="mapGuidance" />

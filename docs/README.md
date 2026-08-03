@@ -29,7 +29,7 @@ GitHub Pages が配信するのは `npm run build` が生成する `out/` だけ
 
 ## ui-text-review.md
 
-留学生TAに渡すUI文言の翻訳確認シート。`lib/ui-text.ts` の35項目を
+留学生TAに渡すUI文言の翻訳確認シート。`lib/ui-text.ts` の37項目を
 言語別（やさしい日本語／English／简体中文／繁體中文／한국어）の表に展開したもの。
 
 **ねぶたの解説本文は含まない。** 解説本文・作品名・団体名・ねぶた師名・タグ値は

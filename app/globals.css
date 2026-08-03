@@ -825,6 +825,93 @@ h1 [data-lang-block="en"] {
   outline-offset: 2px;
 }
 
+.hut-layout-figure {
+  max-width: 48rem;
+  margin: 2.5rem 0 0;
+}
+
+.hut-layout-caption {
+  padding-bottom: 0.5rem;
+  color: var(--sumi);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  border-bottom: 3px solid var(--rule-strong);
+}
+
+.hut-layout-caption [data-lang-block="en"] {
+  letter-spacing: -0.01em;
+}
+
+.hut-layout-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hut-layout-svg {
+  display: block;
+  width: 100%;
+  min-width: 40rem;
+  height: auto;
+  background: var(--surface);
+}
+
+.hut-layout-bay-bridge,
+.hut-layout-aspam polygon {
+  fill: none;
+  stroke: var(--sumi-weak);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.hut-layout-aspam text {
+  fill: var(--sumi-weak);
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-anchor: middle;
+}
+
+.hut-layout-hut-marker {
+  fill: var(--surface);
+  stroke: var(--rule-strong);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.hut-layout-hut-number {
+  fill: var(--sumi);
+  font-family: inherit;
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  pointer-events: none;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.hut-layout-accessible-label {
+  font-size: 1px;
+}
+
+.hut-layout-hut-link:hover .hut-layout-hut-marker,
+.hut-layout-hut-link:active .hut-layout-hut-marker {
+  fill: var(--washi-lit);
+}
+
+.hut-layout-hut-link:focus-visible {
+  outline: none;
+}
+
+.hut-layout-hut-link:focus-visible .hut-layout-hut-marker {
+  stroke: var(--sumi);
+  stroke-width: 5;
+}
+
 .map-guidance {
   max-width: 35em;
   margin-top: 1.125rem;
