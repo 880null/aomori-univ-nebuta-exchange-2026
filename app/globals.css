@@ -8,6 +8,7 @@
   --surface: #fffdf7;
   --on-axis: #fff;
   --lamp: #ffcf8a;
+  --washi-lit: #faedd5;
   --axis-theme: #27436f;
   --axis-subject: #1f5b4e;
   --axis-scene: #96372b;
@@ -421,7 +422,8 @@ h1 [data-lang-block="en"] {
 }
 
 .catalog-entry:active {
-  background: var(--rule);
+  border-bottom-color: var(--rule-strong);
+  background: var(--washi-lit);
 }
 
 .catalog-entry:has(.entry-title h2 a:focus-visible) {
@@ -1014,7 +1016,9 @@ h1 [data-lang-block="en"] {
   }
 
   .catalog-entry {
-    transition: background-color 100ms linear;
+    transition:
+      background-color 100ms linear,
+      border-bottom-color 100ms linear;
   }
 
   .language-switcher-button:active,
