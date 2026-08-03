@@ -108,31 +108,36 @@ function createExcerpt(body, language) {
   return `${excerptCodePoints.join("")}…`;
 }
 
-async function readPngDimensions(imagePath) {
-  if (extname(imagePath).toLowerCase() !== ".png") {
-    throw new Error(`Image must be a PNG file: "${imagePath}".`);
+async function readWebpDimensions(imagePath) {
+  if (extname(imagePath).toLowerCase() !== ".webp") {
+    throw new Error(`Image must be a WebP file: "${imagePath}".`);
   }
 
   const filePath = resolve(projectRoot, "public", `.${imagePath}`);
   const buffer = await readFile(filePath);
-  const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 
-  if (buffer.length < 24 || !buffer.subarray(0, 8).equals(pngSignature)) {
-    throw new Error(`Invalid PNG signature: "${imagePath}".`);
+  if (
+    buffer.length < 30 ||
+    buffer.toString("ascii", 0, 4) !== "RIFF" ||
+    buffer.toString("ascii", 8, 12) !== "WEBP"
+  ) {
+    throw new Error(`Invalid WebP signature: "${imagePath}".`);
   }
 
   if (
-    buffer.readUInt32BE(8) !== 13 ||
-    buffer.toString("ascii", 12, 16) !== "IHDR"
+    buffer.toString("ascii", 12, 16) !== "VP8 " ||
+    !buffer.subarray(23, 26).equals(Buffer.from([157, 1, 42]))
   ) {
-    throw new Error(`PNG is missing the expected IHDR chunk: "${imagePath}".`);
+    throw new Error(
+      `WebP is missing the expected VP8 frame header: "${imagePath}".`,
+    );
   }
 
-  const imageWidth = buffer.readUInt32BE(16);
-  const imageHeight = buffer.readUInt32BE(20);
+  const imageWidth = buffer.readUInt16LE(26) & 0x3fff;
+  const imageHeight = buffer.readUInt16LE(28) & 0x3fff;
 
   if (imageWidth === 0 || imageHeight === 0) {
-    throw new Error(`PNG has invalid dimensions: "${imagePath}".`);
+    throw new Error(`WebP has invalid dimensions: "${imagePath}".`);
   }
 
   return { imageWidth, imageHeight };
@@ -176,7 +181,7 @@ const records = await Promise.all(
         rowNumber,
       ).replaceAll(legacyImageToken, "genga");
       const imagePath = `/images/nebuta/${imageFileName}`;
-      const { imageWidth, imageHeight } = await readPngDimensions(imagePath);
+      const { imageWidth, imageHeight } = await readWebpDimensions(imagePath);
       const bodies = {
         ja: requireValue(source, "題材・人物", rowNumber),
         jaEasy: requireValue(source, "やさしい日本語", rowNumber),
