@@ -252,6 +252,10 @@ h1 [data-lang-block="en"] {
   line-height: 1.4;
 }
 
+.filter-heading h2 [data-lang-block="en"] {
+  letter-spacing: -0.01em;
+}
+
 .filter-toggle,
 .filter-clear,
 .filter-tag {
