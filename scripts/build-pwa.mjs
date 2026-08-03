@@ -11,6 +11,7 @@ const projectRoot = path.resolve(
 const dataPath = path.join(projectRoot, "data", "nebuta.json");
 const globalsPath = path.join(projectRoot, "app", "globals.css");
 const publicDirectory = path.join(projectRoot, "public");
+const nebutaImageDirectory = path.join(publicDirectory, "images", "nebuta");
 const outDirectory = path.join(projectRoot, "out");
 const nextStaticDirectory = path.join(outDirectory, "_next", "static");
 const manifestPath = path.join(publicDirectory, "manifest.webmanifest");
@@ -85,6 +86,15 @@ async function collectFiles(directory) {
 
   return files;
 }
+
+const nebutaImagePaths = (await collectFiles(nebutaImageDirectory))
+  .filter((imagePath) => path.extname(imagePath).toLowerCase() === ".webp")
+  .sort();
+const imagePrecacheUrls = nebutaImagePaths.map((imagePath) =>
+  withBasePath(
+    `/${path.relative(publicDirectory, imagePath).split(path.sep).join("/")}`,
+  ),
+);
 
 const staticAssetPaths = (await collectFiles(nextStaticDirectory))
   .filter((assetPath) => [".js", ".css"].includes(path.extname(assetPath)))
@@ -187,6 +197,7 @@ const TILE_CACHE = \`\${CACHE_PREFIX}tiles-\${VERSION}\`;
 const CURRENT_CACHES = new Set([PAGE_CACHE, ASSET_CACHE, TILE_CACHE]);
 const PAGE_PRECACHE_URLS = ${JSON.stringify(pagePrecacheUrls, null, 2)};
 const ASSET_PRECACHE_URLS = ${JSON.stringify(assetPrecacheUrls, null, 2)};
+const IMAGE_PRECACHE_URLS = ${JSON.stringify(imagePrecacheUrls, null, 2)};
 const APP_SHELL_URL = ${JSON.stringify(startUrl)};
 const BASE_PATH = ${JSON.stringify(basePath)};
 const NEXT_STATIC_PREFIX = \`\${BASE_PATH}/_next/static/\`;
@@ -195,17 +206,39 @@ const TILE_HOSTNAME = "cyberjapandata.gsi.go.jp";
 const TILE_CACHE_LIMIT = 300;
 
 self.addEventListener("install", (event) => {
+  const precacheImages = async () => {
+    try {
+      const imageCache = await caches.open(ASSET_CACHE);
+      await Promise.allSettled(
+        IMAGE_PRECACHE_URLS.map(async (imageUrl) => {
+          const cachedResponse = await imageCache.match(imageUrl);
+
+          if (!cachedResponse) {
+            await imageCache.add(imageUrl);
+          }
+        }),
+      );
+    } catch {
+      // Image precaching is best-effort and must not fail installation.
+    }
+  };
+
+  const installPromise = (async () => {
+    const [pageCache, assetCache] = await Promise.all([
+      caches.open(PAGE_CACHE),
+      caches.open(ASSET_CACHE),
+    ]);
+    await Promise.all([
+      pageCache.addAll(PAGE_PRECACHE_URLS),
+      assetCache.addAll(ASSET_PRECACHE_URLS),
+    ]);
+    await self.skipWaiting();
+  })();
+
   event.waitUntil(
     (async () => {
-      const [pageCache, assetCache] = await Promise.all([
-        caches.open(PAGE_CACHE),
-        caches.open(ASSET_CACHE),
-      ]);
-      await Promise.all([
-        pageCache.addAll(PAGE_PRECACHE_URLS),
-        assetCache.addAll(ASSET_PRECACHE_URLS),
-      ]);
-      await self.skipWaiting();
+      await installPromise;
+      await precacheImages();
     })(),
   );
 });
