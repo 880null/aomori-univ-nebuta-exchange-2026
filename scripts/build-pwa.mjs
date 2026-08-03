@@ -205,24 +205,24 @@ const IMAGE_PREFIX = \`\${BASE_PATH}/images/\`;
 const TILE_HOSTNAME = "cyberjapandata.gsi.go.jp";
 const TILE_CACHE_LIMIT = 300;
 
+async function precacheImages() {
+  try {
+    const imageCache = await caches.open(ASSET_CACHE);
+    await Promise.allSettled(
+      IMAGE_PRECACHE_URLS.map(async (imageUrl) => {
+        const cachedResponse = await imageCache.match(imageUrl);
+
+        if (!cachedResponse) {
+          await imageCache.add(imageUrl);
+        }
+      }),
+    );
+  } catch {
+    // Image precaching is best-effort and must not fail the lifecycle event.
+  }
+}
+
 self.addEventListener("install", (event) => {
-  const precacheImages = async () => {
-    try {
-      const imageCache = await caches.open(ASSET_CACHE);
-      await Promise.allSettled(
-        IMAGE_PRECACHE_URLS.map(async (imageUrl) => {
-          const cachedResponse = await imageCache.match(imageUrl);
-
-          if (!cachedResponse) {
-            await imageCache.add(imageUrl);
-          }
-        }),
-      );
-    } catch {
-      // Image precaching is best-effort and must not fail installation.
-    }
-  };
-
   const installPromise = (async () => {
     const [pageCache, assetCache] = await Promise.all([
       caches.open(PAGE_CACHE),
@@ -257,6 +257,7 @@ self.addEventListener("activate", (event) => {
           .map((cacheName) => caches.delete(cacheName)),
       );
       await self.clients.claim();
+      await precacheImages();
     })(),
   );
 });
