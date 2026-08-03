@@ -362,8 +362,11 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
 
-  if (request.mode === "navigate") {
+  if (url.origin === self.location.origin) {
     event.waitUntil(precacheImages());
+  }
+
+  if (request.mode === "navigate") {
     event.respondWith(networkFirstNavigation(request));
     return;
   }
