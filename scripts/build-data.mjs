@@ -82,7 +82,10 @@ function requireValue(record, fieldName, rowNumber) {
 }
 
 function createExcerpt(body, language) {
-  const normalizedBody = body.replace(/\s+/gu, " ").trim();
+  const normalizedBody = body
+    .replace(/\*\*/gu, "")
+    .replace(/\s+/gu, " ")
+    .trim();
   const codePoints = Array.from(normalizedBody);
   // 抜粋上限は表示用ではなくペイロード削減用で、視覚的な2行打ち切りはCSSが担う。
   // 1440pxで英語は135文字見え、旧240文字は1.78倍、320文字なら2.37倍の余裕になる。

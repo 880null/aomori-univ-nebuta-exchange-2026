@@ -11,6 +11,7 @@ import {
   getNebutaFloatByRowNumber,
   getNebutaRowNumbers,
 } from "@/lib/nebuta";
+import { parseEmphasis } from "@/lib/rich-text";
 import { tagAxes } from "@/lib/tag-axes";
 
 type NebutaDetailPageProps = Readonly<{
@@ -118,7 +119,15 @@ export default async function NebutaDetailPage({
               .split("\n")
               .filter((paragraph) => paragraph.trim() !== "")
               .map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
+                <p key={index}>
+                  {parseEmphasis(paragraph).map((segment, segmentIndex) =>
+                    segment.strong ? (
+                      <strong key={segmentIndex}>{segment.text}</strong>
+                    ) : (
+                      segment.text
+                    ),
+                  )}
+                </p>
               ))}
           </div>
         ))}
